@@ -70,7 +70,7 @@ class LabSerializer(serializers.ModelSerializer):
 
 class AssistantSerializer(serializers.ModelSerializer):
     user = serializers.StringRelatedField(read_only=True)
-    assisstant_lab = LabSerializer(many=True)
+    assistant_lab = LabSerializer(many=True)
 
     class Meta:
         model = Assistant
