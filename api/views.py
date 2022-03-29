@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.shortcuts import render
-from .models import Department, Student, Doctor, Lecture,Assisstant,Subject,Lab
+from .models import Department, Student, Doctor, Lecture, Assistant, Subject, Lab
 from users.models import NewUser
 from users.serializers import NewUserSerializer
 # from .serializers import StudentSerializer
@@ -9,7 +9,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import MyTokenObtainPairSerializer, StudentSerializer, DepartmentSerializer
 from .serializers import DoctorSerializer, LectureSerializer, LabSerializer
-from .serializers import AssisstantSerializer
+from .serializers import AssistantSerializer
 # from backend.settings import api_settings
 
 # Create your views here.
@@ -20,9 +20,14 @@ from rest_framework import status
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
+from django.http import HttpResponse
 
 
+def test(request):
+    return HttpResponse("working")
 # to change claim obtain token
+
+
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
 
@@ -58,13 +63,32 @@ class StudentDetailApi(APIView):
         return Response(serializer.data)
 
 
+def get_subject(name):
+        try:
+            return Subject.objects.get(name=name)
+        except Subject.DoesNotExist:
+            raise Http404
+
+
 class DoctorDetailApi(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = (IsAuthenticated, )
-    
-    
 
+    detail = "this Subject isn't yours "
+
+    context = {'detail': detail}
+
+    def get_doctor(self):
+        doctor = Doctor.objects.get(user=self.request.user)
+        return doctor
+
+    def get_Lecture(self, pk):
+        try:
+            return Lecture.objects.get(pk=pk)
+        except Lecture.DoesNotExist:
+            raise Http404
     # get doctor subjects and it's lecture
+
     def get(self, request):
         user = self.request.user
         doctor = Doctor.objects.get(user=user)
@@ -73,151 +97,171 @@ class DoctorDetailApi(APIView):
     # post new lecture
 
     def post(self, request):
+
         serializer = LectureSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
-            return Response(
-                serializer.data,
-                status=status.HTTP_201_CREATED)
+            subject = get_subject(serializer.validated_data['subject'])
+            doctor = self.get_doctor()
+            if doctor ==subject.doctor:
+                serializer.save()
+                return Response(
+                    serializer.data,
+                    status=status.HTTP_201_CREATED)
+            else:
+                return Response(self.context
+                                )
         return Response(
             serializer.data,
             status=status.HTTP_400_BAD_REQUEST)
-    def get_doctor(self):
-        doctor = Doctor.objects.get(user=self.request.user)
-        return doctor
-    def get_Lecture(self, pk):
-        try:
-            return Lecture.objects.get(pk=pk)
-        except Lecture.DoesNotExist:
-            raise Http404
-    
-           
+
+
     # put lecture
+
 
     def put(self, request):
         pk = self.request.query_params.get('pk')
         lecture = self.get_Lecture(pk=pk)
         doctor = self.get_doctor()
-        detail = ''
-        
-        if doctor == lecture.doctor:
 
-            serializer = LectureSerializer(lecture, data=self.request.data)
-            if serializer.is_valid():
+        detail = "this lecture isn't yours "
+        cotext = {'msg':detail}
+        serializer = LectureSerializer(lecture, data=self.request.data)
+        if serializer.is_valid():
+            subject = get_subject(serializer.validated_data['subject'])
+            if subject == lecture.subject  and doctor == subject.doctor:
+
                 serializer.save()
-                detail = 'Updated'
-                # context = {
-                #     'msg': detail
-                # }
                 return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
-                
-        else:
-                detail = "this lecture isn't yours "
-                # context = {
-                #     'msg': detail
-                # }
+
+            else:
+
+                return Response(cotext)
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request):
         pk = self.request.query_params.get('pk')
         lecture = self.get_Lecture(pk=pk)
-        doctor=self.get_doctor()
-      
-        detail = ''
-        
-        if doctor ==lecture.doctor:
-      
+        doctor = self.get_doctor()
+
+        # print(doctor.doctor_subjects.all())
+        if lecture.subject in doctor.doctor_subjects.all():
             lecture.delete()
             detail = 'deleted'
+
+            context = {
+                'msg': detail
+            }
+            return Response(context)
         else:
-            detail = "this lecture isn't yours "
-        context = {
-            'msg': detail
-        }
-        return Response(context)
+            detail = "this Subject isn't yours "
+            context = {
+                'msg': detail
+            }
+            return Response(context)
 
 
-
-class  AssisstantDetailApi(APIView):
+class AssisstantDetailApi(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = (IsAuthenticated, )
-    def get_subject(slef,name):
+
+    def get_assistant(self):
+        assistant = Assistant.objects.get(user=self.request.user)
+        return assistant
+    def get_lab(self, pk):
         try:
-            return Subject.objects.get(name=name)
-        except Subject.DoesNotExist:
-            raise Http404
-    def get_assisstant(self):
-        doctor = Assisstant.objects.get(user=self.request.user)
-        return doctor
-    def get_lab(self,pk):
-        try:
-            # print(Lab.objects.get(pk=pk))
+
             return Lab.objects.get(pk=pk)
         except Lab.DoesNotExist:
             raise Http404
-        
-   
+
     def get(self, request):
         user = self.request.user
-        
-        assisstant = Assisstant.objects.get(user=user)
-        print(assisstant)
-        serializer = AssisstantSerializer(assisstant)
+
+        assistant = Assistant.objects.get(user=user)
+
+        serializer = AssistantSerializer(assistant)
         return Response(serializer.data)
 
     def post(self, request):
         serializer = LabSerializer(data=request.data)
-        
+
         if serializer.is_valid():
-            subject = self.get_subject(serializer.validated_data['subject'])
-            # assisstant = self.get_assisstant()
-            assisstant = serializer.validated_data['assisstant']
-            if assisstant == subject.assisstant:
+            subject = get_subject(serializer.validated_data['subject'])
+            assistant = self.get_assistant()
+
+            if assistant == subject.assistant:
                 serializer.save()
-                
+
                 return Response(
                     serializer.data,
                     status=status.HTTP_201_CREATED)
             else:
-                context={
+                context ={
                     'msg': "this subject isn't yours"
-                    }
+                }
                 return Response(
-                   context
-                   
+                    context
+
                 )
         else:
-            
+
             return Response(
                 serializer.data,
                 status=status.HTTP_400_BAD_REQUEST)
 
     def put(self, request):
         pk = self.request.query_params.get('pk')
-        
+
         lab = self.get_lab(pk)
-        
-        assisstant = self.get_assisstant()
-        detail = ''
 
-        if assisstant == lab.assisstant:
+        assistant = self.get_assistant()
 
-            serializer = LabSerializer(lab, data=self.request.data)
-            if serializer.is_valid():
+        serializer = LabSerializer(lab, data=self.request.data)
+        # if assisstant == lab.assisstant:
+        if serializer.is_valid():
+
+            subject = get_subject(serializer.validated_data['subject'])
+            if subject == lab.subject and assistant ==subject.assistant:
                 serializer.save()
                 detail = 'Updated'
-                # context = {
-                #     'msg': detail
-                # }
+                context = {
+                    'msg': detail
+                }
                 return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
-
+            else:
+                detail = 'nothing'
+                context = {
+                    'msg': detail
+                }
+                return Response(context)
         else:
-            detail = "this lecture isn't yours "
+            detail = "this lab isn't yours "
             # context = {
             #     'msg': detail
             # }
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    def delete(self, request):
+        pk = self.request.query_params.get('pk')
+        lab = self.get_lab(pk)
+        assistant = self.get_assistant()
+
+        # print(doctor.doctor_subjects.all())
+        if lab.subject in assistant.assistant_subjects.all():
+            lab.delete()
+            detail = 'deleted'
+
+            context = {
+                'msg': detail
+            }
+            return Response(context)
+        else:
+            detail = "this Subject isn't yours "
+            context = {
+                'msg': detail
+            }
+            return Response(context)
 
 # class User_pk(APIView):
 #     authenticated_classes=(JWTAuthentication)

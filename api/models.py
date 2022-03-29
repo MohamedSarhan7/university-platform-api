@@ -23,7 +23,7 @@ class Doctor(models.Model):
         return self.user.username
 
 
-class Assisstant(models.Model):
+class Assistant(models.Model):
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
@@ -37,8 +37,8 @@ class Subject(models.Model):
     pass_degree = models.IntegerField(default=50)
     doctor = models.ForeignKey(
         Doctor,  blank=True, null=True, related_name='doctor_subjects', on_delete=models.CASCADE)
-    assisstant = models.ForeignKey(
-        Assisstant, blank=True, null=True, on_delete=models.CASCADE)
+    assistant = models.ForeignKey(
+        Assistant, blank=True, null=True, related_name='assistant_subjects', on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -48,8 +48,8 @@ class Lecture(models.Model):
     name = models.CharField(max_length=100)
     subject = models.ForeignKey(
         Subject, default='', related_name='subject_lecture', on_delete=models.CASCADE)
-    doctor = models.ForeignKey(
-        Doctor, default='', related_name='doctor_lec',  on_delete=models.CASCADE)
+    # doctor = models.ForeignKey(
+    #     Doctor, default='', related_name='doctor_lec',  on_delete=models.CASCADE)
     material_lec = models.FileField(default='',
                                     upload_to="uploads/material/lecture")
 
@@ -59,8 +59,8 @@ class Lecture(models.Model):
 
 class Lab(models.Model):
     name = models.CharField(max_length=100)
-    assisstant = models.ForeignKey(
-        Assisstant, null=True, related_name='assisstant_lab', on_delete=models.CASCADE)
+    # assisstant = models.ForeignKey(
+    #     Assisstant, null=True, related_name='assisstant_lab', on_delete=models.CASCADE)
     subject = models.ForeignKey(
         Subject, related_name='subject_lab',  null=True, on_delete=models.CASCADE)
     material_lab = models.FileField(
@@ -131,5 +131,5 @@ def create_user_profile(sender, instance, created, **kwargs):
             doctor = Doctor(user=instance)
             doctor.save()
         elif instance.user_type == "3":
-            assisstant = Assisstant(user=instance)
-            assisstant.save()
+            assistant = Assistant(user=instance)
+            assistant.save()
