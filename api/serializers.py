@@ -20,9 +20,9 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['about'] = user.about
         token['gender'] = user.gender
         token['date_of_birth'] = user.date_of_birth
-
-        # ...
-
+        
+        
+        
         return token
 
 
@@ -68,22 +68,13 @@ class LabSerializer(serializers.ModelSerializer):
         return super(LabSerializer, self).to_representation(instance)
 
 
-class SubjectSerializer4Assistant(serializers.ModelSerializer):
-    doctor = serializers.StringRelatedField(read_only=True)
-    assistant = serializers.StringRelatedField(read_only=True)
-    subject_lab = LabSerializer(many=True)
-
-    class Meta:
-        model = Subject
-        fields = ['pk', 'name', 'doctor', 'assistant',
-                  'full_dgree', 'pass_degree', 'subject_lab']
 class AssistantSerializer(serializers.ModelSerializer):
     user = serializers.StringRelatedField(read_only=True)
-    assistant_subjects =SubjectSerializer4Assistant(many=True)
+    assistant_lab = LabSerializer(many=True)
 
     class Meta:
         model = Assistant
-        fields = ['pk', 'user', 'assistant_subjects']
+        fields = ['pk', 'user', 'assistant_lab']
 
 
 class SubjectSerializer(serializers.ModelSerializer):

@@ -1,4 +1,3 @@
-import rest_framework
 from django.conf import settings
 from django.shortcuts import render
 from .models import Department, Student, Doctor, Lecture, Assistant, Subject, Lab
@@ -7,8 +6,6 @@ from users.serializers import NewUserSerializer
 # from .serializers import StudentSerializer
 from django.http import Http404
 from rest_framework.views import APIView
-from rest_framework import viewsets
-from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from .serializers import MyTokenObtainPairSerializer, StudentSerializer, DepartmentSerializer
 from .serializers import DoctorSerializer, LectureSerializer, LabSerializer
@@ -24,8 +21,6 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 from django.http import HttpResponse
-
-# from drf_yasg.utils import swagger_auto_schema
 
 
 def test(request):
@@ -56,10 +51,8 @@ class StudentApi(APIView):
 
 
 class StudentDetailApi(APIView):
-    # serializer_class = DepartmentSerializer
     authentication_classes = [JWTAuthentication]
     permission_classes = (IsAuthenticated, )
-    # serializer_class = DepartmentSerializer
 
     def get(self, request):
         user = self.request.user
@@ -71,17 +64,16 @@ class StudentDetailApi(APIView):
 
 
 def get_subject(name):
-    try:
-        return Subject.objects.get(name=name)
-    except Subject.DoesNotExist:
-        raise Http404
+        try:
+            return Subject.objects.get(name=name)
+        except Subject.DoesNotExist:
+            raise Http404
 
 
 class DoctorDetailApi(APIView):
-    serializer_class = DoctorSerializer
     authentication_classes = [JWTAuthentication]
     permission_classes = (IsAuthenticated, )
-    # serializer_class = rest_framework.serializers.Serializer
+
     detail = "this Subject isn't yours "
 
     context = {'detail': detail}
@@ -104,14 +96,13 @@ class DoctorDetailApi(APIView):
         return Response(serializer.data)
     # post new lecture
 
-    # @swagger_auto_schema(request_body=LectureSerializer)
     def post(self, request):
 
         serializer = LectureSerializer(data=request.data)
         if serializer.is_valid():
             subject = get_subject(serializer.validated_data['subject'])
             doctor = self.get_doctor()
-            if doctor == subject.doctor:
+            if doctor ==subject.doctor:
                 serializer.save()
                 return Response(
                     serializer.data,
@@ -123,19 +114,21 @@ class DoctorDetailApi(APIView):
             serializer.data,
             status=status.HTTP_400_BAD_REQUEST)
 
+
     # put lecture
-    # @swagger_auto_schema(request_body=LectureSerializer)
+
+
     def put(self, request):
         pk = self.request.query_params.get('pk')
         lecture = self.get_Lecture(pk=pk)
         doctor = self.get_doctor()
 
         detail = "this lecture isn't yours "
-        cotext = {'msg': detail}
+        cotext = {'msg':detail}
         serializer = LectureSerializer(lecture, data=self.request.data)
         if serializer.is_valid():
             subject = get_subject(serializer.validated_data['subject'])
-            if subject == lecture.subject and doctor == subject.doctor:
+            if subject == lecture.subject  and doctor == subject.doctor:
 
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
@@ -146,7 +139,6 @@ class DoctorDetailApi(APIView):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    # @swagger_auto_schema(request_body=LectureSerializer)
     def delete(self, request):
         pk = self.request.query_params.get('pk')
         lecture = self.get_Lecture(pk=pk)
@@ -170,14 +162,12 @@ class DoctorDetailApi(APIView):
 
 
 class AssisstantDetailApi(APIView):
-    serializer_class = AssistantSerializer
     authentication_classes = [JWTAuthentication]
     permission_classes = (IsAuthenticated, )
 
     def get_assistant(self):
         assistant = Assistant.objects.get(user=self.request.user)
         return assistant
-
     def get_lab(self, pk):
         try:
 
@@ -207,7 +197,7 @@ class AssisstantDetailApi(APIView):
                     serializer.data,
                     status=status.HTTP_201_CREATED)
             else:
-                context = {
+                context ={
                     'msg': "this subject isn't yours"
                 }
                 return Response(
@@ -232,7 +222,7 @@ class AssisstantDetailApi(APIView):
         if serializer.is_valid():
 
             subject = get_subject(serializer.validated_data['subject'])
-            if subject == lab.subject and assistant == subject.assistant:
+            if subject == lab.subject and assistant ==subject.assistant:
                 serializer.save()
                 detail = 'Updated'
                 context = {
