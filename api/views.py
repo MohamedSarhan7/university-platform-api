@@ -1,3 +1,4 @@
+from datetime import date
 from django.conf import settings
 from django.shortcuts import render
 from .models import Department, Student, Doctor, Lecture, Assistant, Subject, Lab
@@ -24,7 +25,8 @@ from django.http import HttpResponse
 
 
 def test(request):
-    return HttpResponse("working")
+    today= date.today()
+    return HttpResponse(f"working.. ({today})")
 # to change claim obtain token
 
 
