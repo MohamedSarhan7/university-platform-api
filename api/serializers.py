@@ -1,35 +1,32 @@
 from rest_framework import serializers
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+# from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
-from .models import Department, Student, Doctor, Subject, Lecture, Lab, Assistant
+from .models import Department, Student, Doctor, Subject, Lecture
 from users.models import NewUser
 
 # to change claim obtain token
 
 
-class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
-    @classmethod
-    def get_token(cls, user):
-        token = super().get_token(user)
+# class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+#     @classmethod
+#     def get_token(cls, user):
+#         token = super().get_token(user)
 
-        # Add custom claims
-        token['username'] = user.username
-        token['email'] = user.email
-        token['user_type'] = user.user_type
-        token['first_name'] = user.first_name
-        token['about'] = user.about
-        token['gender'] = user.gender
-        token['date_of_birth'] = user.date_of_birth
+#         # Add custom claims
+#         token['username'] = user.username
+#         token['email'] = user.email
+#         token['user_type'] = user.user_type
+#         token['first_name'] = user.first_name
+#         token['about'] = user.about
+#         token['gender'] = user.gender
+#         token['date_of_birth'] = user.date_of_birth
         
         
         
-        return token
+#         return token
 
 
-# class NewUserSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model=NewUser
-# #         fields='__all__'
+
 
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -39,10 +36,7 @@ class StudentSerializer(serializers.ModelSerializer):
 
 
 class LectureSerializer(serializers.ModelSerializer):
-    # doctor = serializers.StringRelatedField(read_only=True)
-    # doctor = serializers.PrimaryKeyRelatedField(read_only=True)
-    # subject = serializers.StringRelatedField(read_only=True)
-    # subject = serializers.PrimaryKeyRelatedField(read_only=True)
+    
     class Meta:
         model = Lecture
         fields = ['pk', 'name',  'subject', 'material_lec', ]
@@ -53,40 +47,21 @@ class LectureSerializer(serializers.ModelSerializer):
         return super(LectureSerializer, self).to_representation(instance)
 
 
-class LabSerializer(serializers.ModelSerializer):
-    # assisstant = serializers.StringRelatedField(read_only=True)
-    # subject = serializers.StringRelatedField(read_only=True)
-
-    class Meta:
-        model = Lab
-        fields = ['pk', 'name',  'subject', 'material_lab', ]
-
-    def to_representation(self, instance):
-        self.fields['subject'] = serializers.StringRelatedField(read_only=True)
-        self.fields['assistant'] = serializers.StringRelatedField(
-            read_only=True)
-        return super(LabSerializer, self).to_representation(instance)
 
 
-class AssistantSerializer(serializers.ModelSerializer):
-    user = serializers.StringRelatedField(read_only=True)
-    assistant_lab = LabSerializer(many=True)
 
-    class Meta:
-        model = Assistant
-        fields = ['pk', 'user', 'assistant_lab']
 
 
 class SubjectSerializer(serializers.ModelSerializer):
     doctor = serializers.StringRelatedField(read_only=True)
-    assistant = serializers.StringRelatedField(read_only=True)
+    # assistant = serializers.StringRelatedField(read_only=True)
     subject_lecture = LectureSerializer(many=True)
-    subject_lab = LabSerializer(many=True)
+
 
     class Meta:
         model = Subject
-        fields = ['pk', 'name', 'doctor', 'assistant',
-                  'full_dgree', 'pass_degree', 'subject_lecture', 'subject_lab']
+        fields = ['pk', 'name', 'doctor', 
+                  'full_dgree', 'pass_degree', 'subject_lecture']
 
 
 class DepartmentSerializer(serializers.ModelSerializer):
@@ -95,17 +70,17 @@ class DepartmentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Department
-        fields = ['name', 'year', 'subject', ]
+        fields = ['dep_name', 'level', 'subject', ]
 
 
 class SubjectSerializer4Doctor(serializers.ModelSerializer):
     doctor = serializers.StringRelatedField(read_only=True)
-    assistant = serializers.StringRelatedField(read_only=True)
+    # assistant = serializers.StringRelatedField(read_only=True)
     subject_lecture = LectureSerializer(many=True)
 
     class Meta:
         model = Subject
-        fields = ['pk', 'name', 'doctor', 'assistant',
+        fields = ['pk', 'name', 'doctor', 
                   'full_dgree', 'pass_degree', 'subject_lecture']
 
 
