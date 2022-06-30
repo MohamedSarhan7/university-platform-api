@@ -1,1 +1,1 @@
-web: gunicorn backend.wsgi --lof-file=-
+web: gunicorn backend.wsgi --log-file=-
