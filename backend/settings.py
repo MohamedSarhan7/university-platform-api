@@ -133,7 +133,7 @@ DATABASES = {
         
         'HOST': 'ec2-63-35-156-160.eu-west-1.compute.amazonaws.com',
         
-        'PORT': '5443',
+        'PORT': '5432',
 
     }
 
@@ -180,9 +180,9 @@ STATIC_ROOT=os.path.join(BASE_DIR,'static')
 django_heroku.settings(locals())
 MEDIA_ROOT = BASE_DIR / "uploads"
 MEDIA_URL = "/image/"
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
-)
+# STATICFILES_DIRS = (
+#     os.path.join(BASE_DIR, 'static'),
+# )
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # Default primary key field type
