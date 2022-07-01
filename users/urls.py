@@ -1,8 +1,10 @@
 
 from django.urls import path, include
-from .views import Logout_BlacklistTokenUpdateView
+from .views import CustomAuthToken
+
 
 urlpatterns = [
    
-    path("logout",Logout_BlacklistTokenUpdateView.as_view()),
+    path('token', CustomAuthToken.as_view()),
+    path("api-auth/",include('dj_rest_auth.urls')),#login pw-rest pw-rest-confirm pw-change
 ]
