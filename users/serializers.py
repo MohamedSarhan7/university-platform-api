@@ -1,11 +1,11 @@
 from rest_framework import serializers
 from.models import NewUser
 
-
-class NewUserSerializer(serializers.ModelSerializer):
+from django.conf import settings
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
+      
         model=NewUser
-        exclude=['id','password']
-        # fields='__all__'
-        # fields=['email','username','user_type','student_id','doctor_id',]
-
+        exclude=['id','email','password','last_login','start_date',
+                 'user_type','is_superuser','is_staff','is_active','groups','user_permissions']
+   
