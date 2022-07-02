@@ -1,26 +1,14 @@
 from datetime import date
-from django.conf import settings
-from django.shortcuts import render
 from .models import Department, Student, Doctor, Lecture,  Subject
-from users.models import NewUser
-from users.serializers import NewUserSerializer
-# from .serializers import StudentSerializer
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import StudentSerializer, DepartmentSerializer
 from .serializers import DoctorSerializer, LectureSerializer
-# from backend.settings import api_settings
 
-# Create your views here.
-# from .serializers import MyTokenObtainPairSerializer
-# from rest_framework_simplejwt.views import TokenObtainPairView
-from rest_framework import status
 from rest_framework.authentication import TokenAuthentication
-# from rest_framework_simplejwt import authentication
-# from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import IsAuthenticated
-# from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
+
 from django.http import HttpResponse
 
 

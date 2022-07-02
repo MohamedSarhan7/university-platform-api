@@ -47,10 +47,12 @@ INSTALLED_APPS = [
 
     'api',
     'users',
+    'post',
 
     'rest_framework',
     'rest_framework.authtoken',
     'dj_rest_auth',
+    'dj_rest_auth.registration',
 
     # 'rest_framework_simplejwt',
     # 'rest_framework_simplejwt.token_blacklist',
@@ -60,8 +62,7 @@ INSTALLED_APPS = [
 
 ]
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-SITE_ID = 1 #
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     "whitenoise.middleware.WhiteNoiseMiddleware",
@@ -210,3 +211,16 @@ CORS_ALLOW_ALL_ORIGINS = True
 # CORS_ALLOWED_ORIGINS = [
 #     "http://localhost:3000"
 # ]
+OLD_PASSWORD_FIELD_ENABLED = True
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+
+SITE_ID = 1 #
+
+# EMAIL_USE_TLS = True
+# # EMAIL_USE_SSL=True
+# EMAIL_HOST = 'smtp.email.com'
+# EMAIL_PORT = 587
+# EMAIL_HOST_USER = 'example@email.com'
+# EMAIL_HOST_PASSWORD = 'password'
+# EMAIL_TIMEOUT=4

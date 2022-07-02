@@ -17,11 +17,21 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+# from dj_rest_auth.views import PasswordResetView,PasswordResetConfirmView,PasswordChangeView
+
+from django.http import HttpResponse
+
+def empty_view(request):
+    return HttpResponse('')
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("", include('api.urls')),
     path("users/",include('users.urls')),
- 
-    
+    path("posts/",include("post.urls")),
+    path("api-auth/",include('dj_rest_auth.urls')),
+    # path("password/reset",PasswordResetView.as_view()),
+    # path("password_reset_confirm/<uid>/<token>",PasswordResetConfirmView.as_view(),name='password_reset_confirm'),
+   
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
