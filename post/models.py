@@ -4,7 +4,7 @@ from users.models import NewUser
 # Create your models here.
 
 class Post(models.Model):
-    user=models.ForeignKey(NewUser,on_delete=models.CASCADE)
+    user=models.ForeignKey(NewUser,on_delete=models.CASCADE,blank=True)
     body=models.TextField()
     image=models.ImageField(upload_to='Posts/',null=True,blank=True)
     created_at=models.DateTimeField(auto_now_add=True)
