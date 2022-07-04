@@ -37,9 +37,9 @@ class Lecture(models.Model):
   
     name = models.CharField(max_length=100)
     subject = models.ForeignKey(
-        Subject, default='', related_name='subject_lecture', on_delete=models.CASCADE)
+        Subject, related_name='subject_lecture', on_delete=models.CASCADE)
     
-    material_lec = models.FileField(default='',
+    material_lec = models.FileField(
                                     upload_to="material/lecture/")
 
     def __str__(self):
