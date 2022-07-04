@@ -29,12 +29,12 @@ class PostApi(APIView):
         if serializer.is_valid(raise_exception=True):
             serializer.save(user=self.request.user)  
             return Response({
-                    "status":"true",
+                    "status":True,
                     "msg":"succsess",
                     "data":serializer.data
                 })
         return Response({
-                    "status":"false",
+                    "status":False,
                     "msg":"user error",
                     "data":serializer.data
                 })    
@@ -53,12 +53,12 @@ class PostApi(APIView):
         if serializer.is_valid(raise_exception=True):
             serializer.save(user=self.request.user)  
             return Response({
-                    "status":"true",
+                    "status":True,
                     "msg":"succsess",
                     "data":serializer.data
                 })
         return Response({
-                    "status":"false",
+                    "status":False,
                     "msg":"user error",
                     "data":serializer.data
                 })    
@@ -70,12 +70,12 @@ class PostApi(APIView):
         if request.user==post.user:
             post.delete()
             return Response({
-                    "status":"true",
+                    "status":True,
                     "msg":"Deleted",
                    
                 })
         return Response({
-                    "status":"false",
+                    "status":False,
                     "msg":" err",
                    
                 })
@@ -93,12 +93,12 @@ class CommentApi(APIView):
         if serializer.is_valid(raise_exception=True):
             serializer.save(user=self.request.user,post=post)  
             return Response({
-                    "status":"true",
+                    "status":True,
                     "msg":"succsess",
                     "data":serializer.data
                 })
         return Response({
-                    "status":"false",
+                    "status":False,
                     "msg":"error",
                     "data":serializer.data
                 })      
@@ -112,12 +112,12 @@ class CommentApi(APIView):
         if request.user==comment.user:
             comment.delete()
             return Response({
-                    "status":"true",
+                    "status":True,
                     "msg":"Deleted",
                    
                 })
         return Response({
-                    "status":"false",
+                    "status":False,
                     "msg":" err",
                    
                 })          

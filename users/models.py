@@ -56,7 +56,7 @@ class NewUser(AbstractBaseUser, PermissionsMixin):
     date_of_birth = models.DateField(null=True, blank=True)
     user_type = models.CharField(
         choices=USER_TYPE_CHOICES, null=True, max_length=20)
-    image=models.ImageField(default='uploads/Profile-Pic/default.jpg',upload_to='Profile-Pic/',null=True,blank=True)
+    image=models.ImageField(default='./images/users/default.jpg',upload_to='Profile-Pic/',null=True,blank=True)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
 

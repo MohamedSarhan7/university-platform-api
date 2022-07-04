@@ -1,7 +1,7 @@
 
 # Create your views here.
 from .models import NewUser
-from .serializers import UserSerializer
+from .serializers import UserSerializer,UserSerializerGet
 from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -26,7 +26,7 @@ class CustomAuthToken(ObtainAuthToken):
             # user.user_type = serializers.StringRelatedField(read_only=True)
         
             return Response({
-            'status':'true',
+            'status':True,
             'token': token.key,
             'user_type': user.user_type,
             'email': user.email,
@@ -52,10 +52,10 @@ class UserDetailApi(APIView):
         user = self.request.user
         user = NewUser.objects.get(pk=user.pk)
         
-        serializer = UserSerializer(user)
+        serializer = UserSerializerGet(user)
 
         return Response( {
-                'status':"true",
+                'status':True,
                 'msg':"success",
                 'data': serializer.data,
                     })
@@ -70,12 +70,12 @@ class UserDetailApi(APIView):
             serializer.save()
             
             return Response( {
-                'status':"true",
+                'status':True,
                 'msg':"success",
                 'data': serializer.data,
                     })
         return  Response( {
-                'status':"false",
+                'status':False,
                 'msg':"err",
                 'data': serializer.data,
                     })   
