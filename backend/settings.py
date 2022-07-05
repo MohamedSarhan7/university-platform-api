@@ -180,7 +180,7 @@ STATIC_URL = '/static/'
 STATIC_ROOT=os.path.join(BASE_DIR,'static')
 django_heroku.settings(locals())
 MEDIA_ROOT = BASE_DIR / "uploads"
-MEDIA_URL = "/image/"
+MEDIA_URL = "https://uni-platform.herokuapp.com/image/"
 # STATICFILES_DIRS = (
 #     os.path.join(BASE_DIR, 'static'),
 # )

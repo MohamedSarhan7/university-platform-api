@@ -20,7 +20,11 @@ class PostApi(APIView):
         posts=Post.objects.all()
         serializer=PostSerializerGet(posts,many=True)
         
-        return Response(serializer.data)
+        return Response({
+                    "status":True,
+                    "msg":"succsess",
+                    "data":serializer.data
+                })
     
     def post(self,request):
         

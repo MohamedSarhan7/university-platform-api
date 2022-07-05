@@ -29,14 +29,14 @@ class CustomAuthToken(ObtainAuthToken):
             'status':True,
             'token': token.key,
             'user_type': user.user_type,
-            'email': user.email,
-            'username':user.username,
-            'fullname':user.fullname,
+            # 'email': user.email,
+            # 'username':user.username,
+            # 'fullname':user.fullname,
             
-            'image':user.image.url,
-            'about':user.about,
-            'gender':user.gender,
-            'date_of_birth':user.date_of_birth,
+            # 'image':user.image.url,
+            # 'about':user.about,
+            # 'gender':user.gender,
+            # 'date_of_birth':user.date_of_birth,
                 })
         else:
             return Response({
@@ -47,13 +47,12 @@ class CustomAuthToken(ObtainAuthToken):
 class UserDetailApi(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = (IsAuthenticated, )
-
+    
     def get(self,request):
         user = self.request.user
         user = NewUser.objects.get(pk=user.pk)
         
         serializer = UserSerializerGet(user)
-
         return Response( {
                 'status':True,
                 'msg':"success",
