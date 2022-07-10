@@ -5,6 +5,7 @@ from.models import *
         
 class CommentSerializer(serializers.ModelSerializer):
     user = serializers.StringRelatedField(read_only=True)
+    created_at = serializers.DateTimeField(format="%d-%m-%Y %H:%M:%S")
     class Meta:
         model=Comment
   
@@ -13,6 +14,7 @@ class CommentSerializer(serializers.ModelSerializer):
 class PostSerializerGet(serializers.ModelSerializer):
     post_comments = CommentSerializer(many=True)
     user = serializers.StringRelatedField(read_only=True)
+    created_at = serializers.DateTimeField(format="%d-%m-%Y %H:%M:%S")
     class Meta:
         model=Post
         fields=('id',"user","body","image","created_at","post_comments",)
