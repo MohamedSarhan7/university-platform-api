@@ -32,7 +32,6 @@ class CustomAuthToken(ObtainAuthToken):
             # 'email': user.email,
             # 'username':user.username,
             # 'fullname':user.fullname,
-            
             # 'image':user.image.url,
             # 'about':user.about,
             # 'gender':user.gender,

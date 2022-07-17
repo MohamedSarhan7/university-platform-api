@@ -21,4 +21,7 @@ class UserSerializer(serializers.ModelSerializer):
         exclude=['email','password','last_login','start_date',
                  'user_type','is_superuser','is_staff','is_active','groups','user_permissions']
    
-               
+class UserSerializerNewsFeed(serializers.ModelSerializer):
+    class Meta:
+        model=NewUser
+        fields=("fullname","image",)               
