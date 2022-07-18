@@ -7,7 +7,7 @@ class UserSerializerNewsFeed(serializers.ModelSerializer):
     class Meta:
         model=NewUser
         fields=("fullname","image",)        
-class CommentSerializer(serializers.ModelSerializer):
+class CommentSerializerGet(serializers.ModelSerializer):
     user = UserSerializerNewsFeed()
     created_at = serializers.DateTimeField(format="%d-%m-%Y %H:%M:%S")
     class Meta:
@@ -15,8 +15,16 @@ class CommentSerializer(serializers.ModelSerializer):
   
         exclude=['post']
 
+class CommentSerializer(serializers.ModelSerializer):
+    user = serializers.StringRelatedField(read_only=True)
+    # created_at = serializers.DateTimeField(format="%d-%m-%Y %H:%M:%S")
+    class Meta:
+        model=Comment
+  
+        exclude=['post']
+        
 class PostSerializerGet(serializers.ModelSerializer):
-    post_comments = CommentSerializer(many=True)
+    post_comments = CommentSerializerGet(many=True)
     user = UserSerializerNewsFeed()
     created_at = serializers.DateTimeField(format="%d-%m-%Y %H:%M:%S")
     class Meta:
