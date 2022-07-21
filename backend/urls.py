@@ -30,6 +30,7 @@ urlpatterns = [
     path("", include('api.urls')),
     path("users/",include('users.urls')),
     path("posts/",include("post.urls")),
+    path("quiz/",include("quiz.urls")),
     path("api-auth/",include('dj_rest_auth.urls')),
     # path("password/reset",PasswordResetView.as_view()),
     # path("password_reset_confirm/<uid>/<token>",PasswordResetConfirmView.as_view(),name='password_reset_confirm'),

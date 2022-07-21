@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'api',
     'users',
     'post',
+    'quiz',
 
     'rest_framework',
     'rest_framework.authtoken',
